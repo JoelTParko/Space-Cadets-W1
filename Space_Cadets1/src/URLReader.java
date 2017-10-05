@@ -1,33 +1,25 @@
 import java.net.*;
 import java.io.*;
-public class URLReader {
 
-	public static void main(String[] args) throws Exception {
-		String urlString = "http://www.ecs.soton.ac.uk/people/";
-		//String urlString = "https://secure.ecs.soton.ac.uk/people/";
-		int count = 1;
-		int endPosition;
-		//Reading from the console
-		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		String inputLine;
+public class URLReader {
+	
+ String getID() throws Exception{ //Returns user input from console
+		System.out.print("Enter ID:");
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in)); 
+		return in.readLine();
+	}
+ 
+	public String getName(String id) throws Exception { //Finds the name of the person assosiated with the given ID
 		String name;
-		inputLine = in.readLine();
-		
-		in.close();
-		//Reading from a URL
-		URL address = new URL(urlString + inputLine);
+		URL address = new URL("http://www.ecs.soton.ac.uk/people/" + id);
 		BufferedReader in2 = new BufferedReader(new InputStreamReader(address.openStream()));
-		while((inputLine = in2.readLine()) != null && count < 9) {
-			count++;
+		while((name = in2.readLine()) != null) {
+			if(name.contains("<title>")) {
+				break;
+			}
 		}
 		in2.close();
-
-		name = inputLine.substring(11);
-		
-		endPosition = name.indexOf("|");
-		name = name.substring(0, endPosition);
-		System.out.println(name);
+		name = name.substring(11, name.indexOf('|')-1);
+		return name;
 	}
-	
-
 }
